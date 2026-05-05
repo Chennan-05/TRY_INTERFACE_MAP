@@ -15,13 +15,16 @@
   --bg: #0f1117;
   --bg2: #1a1c25;
   --bg3: #242632;
+  --bg4: #2e3040;
   --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
   --text: #e8e6e1;
   --text2: #9a978f;
   --text3: #6b685f;
   --accent: #4ae3b5;
   --accent2: #2bc49a;
   --accent-bg: rgba(74,227,181,0.08);
+  --accent-bg2: rgba(74,227,181,0.15);
   --danger: #e85d4a;
   --warn: #f0a030;
   --info: #5b9cf5;
@@ -38,7 +41,6 @@ body {
   overflow: hidden;
 }
 
-/* Layout */
 .app {
   display: grid;
   grid-template-columns: 320px 1fr;
@@ -46,7 +48,7 @@ body {
   height: 100vh;
 }
 
-/* Top bar */
+/* ── Top bar ── */
 .topbar {
   grid-column: 1 / -1;
   background: var(--bg2);
@@ -68,62 +70,36 @@ body {
 }
 
 .logo-icon {
-  width: 28px;
-  height: 28px;
+  width: 28px; height: 28px;
   background: var(--accent);
   border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
 }
 
 .logo-icon svg { width: 16px; height: 16px; }
 
-.topbar-sep {
-  width: 1px;
-  height: 24px;
-  background: var(--border);
-}
+.topbar-sep { width: 1px; height: 24px; background: var(--border); }
 
-.topbar-nav {
-  display: flex;
-  gap: 4px;
-}
+.topbar-nav { display: flex; gap: 4px; }
 
 .topbar-nav button {
-  background: transparent;
-  border: none;
-  color: var(--text2);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s;
+  background: transparent; border: none; color: var(--text2);
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: all 0.15s;
 }
 
 .topbar-nav button:hover { color: var(--text); background: var(--bg3); }
 .topbar-nav button.active { color: var(--accent); background: var(--accent-bg); }
 
-.topbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 
 .topbar-badge {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent);
+  background: var(--accent-bg); padding: 4px 10px; border-radius: 20px;
   border: 1px solid rgba(74,227,181,0.15);
 }
 
-/* Sidebar */
+/* ── Sidebar ── */
 .sidebar {
   background: var(--bg2);
   border-right: 1px solid var(--border);
@@ -138,33 +114,20 @@ body {
 .sidebar::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
 
 .section-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--text3);
-  margin-bottom: 8px;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--text3); margin-bottom: 8px;
 }
 
-/* Metric cards */
-.metrics {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
+/* Metrics */
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
 .metric-card {
-  background: var(--bg3);
-  border-radius: var(--radius-sm);
-  padding: 14px;
-  position: relative;
-  overflow: hidden;
+  background: var(--bg3); border-radius: var(--radius-sm); padding: 14px;
+  position: relative; overflow: hidden;
 }
 
 .metric-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
+  content: ''; position: absolute; top: 0; left: 0;
   width: 100%; height: 2px;
 }
 
@@ -174,347 +137,362 @@ body {
 .metric-card.c4::before { background: var(--purple); }
 
 .metric-val {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  line-height: 1;
-  margin-bottom: 4px;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+  line-height: 1; margin-bottom: 4px;
 }
 
-.metric-label {
-  font-size: 11px;
-  color: var(--text2);
-  font-weight: 500;
-}
+.metric-label { font-size: 11px; color: var(--text2); font-weight: 500; }
 
-/* Layer controls */
-.layer-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+/* Layer buttons */
+.layer-group { display: flex; flex-direction: column; gap: 6px; }
 
 .layer-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all 0.15s;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 13px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
+  color: var(--text); font-family: inherit; font-size: 13px;
 }
 
-.layer-btn:hover { border-color: rgba(255,255,255,0.15); background: var(--bg3); }
+.layer-btn:hover { border-color: var(--border2); background: var(--bg3); }
 .layer-btn.active { border-color: var(--accent); background: var(--accent-bg); }
 
-.layer-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.layer-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 .layer-btn .check {
-  margin-left: auto;
-  opacity: 0;
-  transition: opacity 0.15s;
-  color: var(--accent);
-  font-size: 14px;
+  margin-left: auto; opacity: 0; transition: opacity 0.15s;
+  color: var(--accent); font-size: 14px;
 }
 
 .layer-btn.active .check { opacity: 1; }
 
 /* Category filters */
-.cat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.cat-list { display: flex; flex-direction: column; gap: 4px; }
 
 .cat-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.12s;
-  font-size: 13px;
-  color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 6px; cursor: pointer;
+  transition: background 0.12s; font-size: 13px; color: var(--text2);
 }
 
 .cat-item:hover { background: var(--bg3); color: var(--text); }
 
-.cat-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
 .cat-count {
-  margin-left: auto;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--text3);
+  margin-left: auto; font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--text3);
 }
 
-/* Legend */
-.legend {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-}
-
-.legend-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text2);
-  margin-bottom: 8px;
-}
-
-.legend-items {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.legend-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text2);
-}
-
-.legend-swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-
-/* Map */
-.map-container {
-  position: relative;
-  overflow: hidden;
-}
-
-#map {
+/* Report button */
+.report-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px; background: var(--accent); color: var(--bg);
+  border: none; border-radius: var(--radius-sm); font-family: inherit;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
   width: 100%;
-  height: 100%;
 }
 
-/* Custom Leaflet overrides */
+.report-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+.report-btn:active { transform: translateY(0); }
+
+.report-btn svg { width: 18px; height: 18px; }
+
+/* ── Map ── */
+.map-container { position: relative; overflow: hidden; }
+
+#map { width: 100%; height: 100%; }
+
+/* Leaflet overrides */
 .leaflet-container { background: var(--bg) !important; font-family: 'DM Sans', sans-serif !important; }
 
 .leaflet-control-zoom {
-  border: none !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
-  border-radius: 10px !important;
-  overflow: hidden !important;
+  border: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+  border-radius: 10px !important; overflow: hidden !important;
 }
 
 .leaflet-control-zoom a {
-  background: var(--bg2) !important;
-  color: var(--text) !important;
+  background: var(--bg2) !important; color: var(--text) !important;
   border-bottom: 1px solid var(--border) !important;
-  width: 36px !important;
-  height: 36px !important;
-  line-height: 36px !important;
-  font-size: 16px !important;
+  width: 36px !important; height: 36px !important;
+  line-height: 36px !important; font-size: 16px !important;
 }
 
 .leaflet-control-zoom a:hover { background: var(--bg3) !important; }
 
+.leaflet-control-attribution {
+  background: rgba(15,17,23,0.8) !important; color: var(--text3) !important;
+  font-size: 10px !important;
+}
+
+.leaflet-control-attribution a { color: var(--text2) !important; }
+
+/* Popups */
 .custom-popup .leaflet-popup-content-wrapper {
-  background: var(--bg2);
-  color: var(--text);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  padding: 0;
+  background: var(--bg2); color: var(--text); border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.5); padding: 0;
 }
 
 .custom-popup .leaflet-popup-tip { background: var(--bg2); }
 .custom-popup .leaflet-popup-content { margin: 0; width: 240px !important; }
 
-.popup-inner {
-  padding: 16px;
-}
+.popup-inner { padding: 16px; }
 
 .popup-cat {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase; margin-bottom: 6px;
 }
 
-.popup-title {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-
-.popup-meta {
-  font-size: 12px;
-  color: var(--text2);
-  line-height: 1.5;
-}
+.popup-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+.popup-meta { font-size: 12px; color: var(--text2); line-height: 1.5; }
 
 .popup-rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 4px; margin-top: 10px;
+  padding-top: 10px; border-top: 1px solid var(--border);
 }
 
-.popup-stars {
-  color: var(--warn);
-  font-size: 13px;
-  letter-spacing: 1px;
-}
+.popup-stars { color: var(--warn); font-size: 13px; letter-spacing: 1px; }
+.popup-rating-text { font-size: 12px; color: var(--text2); margin-left: 6px; }
 
-.popup-rating-text {
-  font-size: 12px;
-  color: var(--text2);
-  margin-left: 6px;
-}
-
-/* Floating map controls */
+/* Map overlays */
 .map-overlay {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 800;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  position: absolute; top: 16px; right: 16px; z-index: 800;
+  display: flex; flex-direction: column; gap: 8px;
 }
 
 .map-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 12px;
-  color: var(--text2);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 6px 14px; font-size: 12px;
+  color: var(--text2); box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .map-chip .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2s infinite;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* Heatmap toggle */
 .heatmap-toggle {
-  position: absolute;
-  bottom: 24px;
-  right: 16px;
-  z-index: 800;
-  display: flex;
-  gap: 4px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 4px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  position: absolute; bottom: 24px; right: 16px; z-index: 800;
+  display: flex; gap: 4px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .heatmap-toggle button {
-  background: transparent;
-  border: none;
-  color: var(--text2);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 7px;
-  cursor: pointer;
+  background: transparent; border: none; color: var(--text2);
+  font-family: inherit; font-size: 12px; font-weight: 500;
+  padding: 6px 14px; border-radius: 7px; cursor: pointer; transition: all 0.15s;
+}
+
+.heatmap-toggle button.active { background: var(--accent-bg); color: var(--accent); }
+
+/* ── Placement mode banner ── */
+.placement-banner {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+  z-index: 900; background: var(--accent); color: var(--bg); padding: 10px 24px;
+  border-radius: 24px; font-size: 14px; font-weight: 600;
+  box-shadow: 0 4px 20px rgba(74,227,181,0.4);
+  display: none; align-items: center; gap: 10px;
+  animation: bounce 1s ease infinite;
+}
+
+.placement-banner.show { display: flex; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+.placement-banner button {
+  background: rgba(0,0,0,0.2); border: none; color: var(--bg);
+  padding: 4px 12px; border-radius: 12px; font-family: inherit;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+
+/* ── Temp marker ── */
+.temp-marker {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent); border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ── Survey panel ── */
+.survey-overlay {
+  position: absolute; top: 0; right: -420px; z-index: 900;
+  width: 400px; height: 100%; background: var(--bg2);
+  border-left: 1px solid var(--border);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; flex-direction: column;
+}
+
+.survey-overlay.open { right: 0; }
+
+.survey-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px; border-bottom: 1px solid var(--border);
+}
+
+.survey-header h2 { font-size: 16px; font-weight: 600; }
+
+.survey-close {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg3); border: none; color: var(--text2);
+  font-size: 18px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all 0.15s;
+}
+
+.survey-close:hover { background: var(--bg4); color: var(--text); }
+
+.survey-body {
+  flex: 1; overflow-y: auto; padding: 20px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.survey-body::-webkit-scrollbar { width: 4px; }
+.survey-body::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+
+/* Form fields */
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field label {
+  font-size: 12px; font-weight: 600; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.field input, .field textarea, .field select {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  color: var(--text); font-family: inherit; font-size: 14px;
+  transition: border-color 0.15s; outline: none;
+}
+
+.field input:focus, .field textarea:focus, .field select:focus {
+  border-color: var(--accent);
+}
+
+.field textarea { resize: vertical; min-height: 80px; }
+
+.field select option { background: var(--bg2); color: var(--text); }
+
+/* Location picker in form */
+.loc-display {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+}
+
+.loc-display.set { border-color: var(--accent); }
+
+.loc-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--text3); flex-shrink: 0;
+}
+
+.loc-display.set .loc-dot { background: var(--accent); }
+
+.loc-text { font-size: 13px; color: var(--text2); flex: 1; }
+
+.loc-display.set .loc-text { color: var(--text); }
+
+.loc-btn {
+  background: var(--bg3); border: none; color: var(--text2);
+  padding: 4px 10px; border-radius: 6px; font-family: inherit;
+  font-size: 11px; font-weight: 500; cursor: pointer;
   transition: all 0.15s;
 }
 
-.heatmap-toggle button.active {
-  background: var(--accent-bg);
-  color: var(--accent);
+.loc-btn:hover { background: var(--bg4); color: var(--text); }
+
+/* Star rating input */
+.star-input { display: flex; gap: 4px; flex-direction: row-reverse; justify-content: flex-end; }
+
+.star-input input { display: none; }
+
+.star-input label {
+  font-size: 28px; color: var(--bg3); cursor: pointer;
+  transition: color 0.1s; line-height: 1;
 }
+
+.star-input label:hover,
+.star-input label:hover ~ label,
+.star-input input:checked ~ label { color: var(--warn); }
+
+/* Submit button */
+.submit-btn {
+  padding: 14px; background: var(--accent); color: var(--bg);
+  border: none; border-radius: var(--radius-sm); font-family: inherit;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s; width: 100%;
+}
+
+.submit-btn:hover { background: var(--accent2); }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Toast notification */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--accent); color: var(--bg); padding: 12px 24px;
+  border-radius: 12px; font-weight: 600; font-size: 14px;
+  box-shadow: 0 4px 20px rgba(74,227,181,0.4);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2000; pointer-events: none;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Point markers */
+.point-marker {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--bg2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  cursor: pointer; transition: transform 0.15s;
+}
+
+.point-marker:hover { transform: scale(1.4); }
 
 /* Cluster markers */
-.marker-cluster {
-  background: transparent !important;
-}
+.marker-cluster { background: transparent !important; }
 
 .cluster-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-  position: relative;
+  width: 40px; height: 40px; display: flex;
+  align-items: center; justify-content: center;
+  border-radius: 50%; font-family: 'DM Mono', monospace;
+  font-size: 12px; font-weight: 600; color: #fff; position: relative;
 }
 
 .cluster-icon::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: inherit;
-  opacity: 0.2;
+  content: ''; position: absolute; inset: -4px;
+  border-radius: 50%; background: inherit; opacity: 0.2;
 }
 
 .cluster-sm { background: var(--accent); }
 .cluster-md { background: var(--info); }
 .cluster-lg { background: var(--purple); }
 
-/* Custom point markers */
-.point-marker {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid var(--bg2);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-  cursor: pointer;
-  transition: transform 0.15s;
+/* Recent submissions list */
+.recent-list { display: flex; flex-direction: column; gap: 6px; }
+
+.recent-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; background: var(--bg); border-radius: 6px;
+  font-size: 12px; color: var(--text2); cursor: pointer;
+  transition: background 0.12s; border: 1px solid var(--border);
 }
 
-.point-marker:hover { transform: scale(1.4); }
+.recent-item:hover { background: var(--bg3); }
 
-/* Attribution override */
-.leaflet-control-attribution {
-  background: rgba(15,17,23,0.8) !important;
-  color: var(--text3) !important;
-  font-size: 10px !important;
-  border-radius: 4px 0 0 0 !important;
-}
-
-.leaflet-control-attribution a { color: var(--text2) !important; }
+.recent-item .cat-dot { flex-shrink: 0; }
+.recent-title { flex: 1; color: var(--text); font-weight: 500; font-size: 12px; }
+.recent-time { font-size: 10px; color: var(--text3); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -538,18 +516,26 @@ body {
       <button>Export</button>
     </div>
     <div class="topbar-right">
-      <div class="topbar-badge">LIVE — OSM Data</div>
+      <div class="topbar-badge" id="totalBadge">247 reports</div>
     </div>
   </div>
 
   <!-- Sidebar -->
   <div class="sidebar">
+    <!-- Report Button -->
+    <button class="report-btn" onclick="startReport()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Report an issue
+    </button>
+
     <!-- Metrics -->
     <div>
       <div class="section-label">Overview</div>
       <div class="metrics">
         <div class="metric-card c1">
-          <div class="metric-val" style="color:var(--accent)">247</div>
+          <div class="metric-val" style="color:var(--accent)" id="metricTotal">247</div>
           <div class="metric-label">Responses</div>
         </div>
         <div class="metric-card c2">
@@ -557,7 +543,7 @@ body {
           <div class="metric-label">Active surveys</div>
         </div>
         <div class="metric-card c3">
-          <div class="metric-val" style="color:var(--warn)">3.8</div>
+          <div class="metric-val" style="color:var(--warn)" id="metricRating">3.8</div>
           <div class="metric-label">Avg. rating</div>
         </div>
         <div class="metric-card c4">
@@ -572,23 +558,15 @@ body {
       <div class="section-label">Map layers</div>
       <div class="layer-group">
         <button class="layer-btn active" data-layer="landuse" onclick="switchBase('landuse')">
-          <span class="layer-dot" style="background:#6dba5e"></span>
-          Land use map
+          <span class="layer-dot" style="background:#6dba5e"></span>Land use map
           <span class="check">&#10003;</span>
         </button>
         <button class="layer-btn" data-layer="roads" onclick="switchBase('roads')">
-          <span class="layer-dot" style="background:#5b9cf5"></span>
-          Road network
+          <span class="layer-dot" style="background:#5b9cf5"></span>Road network
           <span class="check">&#10003;</span>
         </button>
         <button class="layer-btn" data-layer="topo" onclick="switchBase('topo')">
-          <span class="layer-dot" style="background:#d4a054"></span>
-          Topographic
-          <span class="check">&#10003;</span>
-        </button>
-        <button class="layer-btn" data-layer="satellite" onclick="switchBase('satellite')">
-          <span class="layer-dot" style="background:#888"></span>
-          Satellite hybrid
+          <span class="layer-dot" style="background:#d4a054"></span>Topographic
           <span class="check">&#10003;</span>
         </button>
       </div>
@@ -597,48 +575,14 @@ body {
     <!-- Categories -->
     <div>
       <div class="section-label">Issue categories</div>
-      <div class="cat-list">
-        <div class="cat-item" onclick="filterCat('infrastructure')">
-          <span class="cat-dot" style="background:var(--danger)"></span>
-          Infrastructure
-          <span class="cat-count">64</span>
-        </div>
-        <div class="cat-item" onclick="filterCat('environment')">
-          <span class="cat-dot" style="background:var(--accent)"></span>
-          Green spaces
-          <span class="cat-count">53</span>
-        </div>
-        <div class="cat-item" onclick="filterCat('transport')">
-          <span class="cat-dot" style="background:var(--info)"></span>
-          Transport
-          <span class="cat-count">48</span>
-        </div>
-        <div class="cat-item" onclick="filterCat('safety')">
-          <span class="cat-dot" style="background:var(--warn)"></span>
-          Public safety
-          <span class="cat-count">42</span>
-        </div>
-        <div class="cat-item" onclick="filterCat('community')">
-          <span class="cat-dot" style="background:var(--purple)"></span>
-          Community
-          <span class="cat-count">40</span>
-        </div>
-      </div>
+      <div class="cat-list" id="catList"></div>
     </div>
 
-    <!-- Land Use Legend -->
+    <!-- Recent submissions -->
     <div>
-      <div class="section-label">Land use legend (OSM)</div>
-      <div class="legend">
-        <div class="legend-items">
-          <div class="legend-row"><span class="legend-swatch" style="background:#aadeaa"></span> Residential</div>
-          <div class="legend-row"><span class="legend-swatch" style="background:#cfeca8"></span> Farmland / Rural</div>
-          <div class="legend-row"><span class="legend-swatch" style="background:#b5d29c"></span> Forest / Nature</div>
-          <div class="legend-row"><span class="legend-swatch" style="background:#ddccbb"></span> Commercial</div>
-          <div class="legend-row"><span class="legend-swatch" style="background:#c7b8a8"></span> Industrial</div>
-          <div class="legend-row"><span class="legend-swatch" style="background:#cdcdcd"></span> Roads / Transit</div>
-          <div class="legend-row"><span class="legend-swatch" style="background:#aad3df"></span> Water</div>
-        </div>
+      <div class="section-label">Recent submissions</div>
+      <div class="recent-list" id="recentList">
+        <div style="font-size:12px;color:var(--text3);padding:8px 0">Submit a report to see it here</div>
       </div>
     </div>
   </div>
@@ -646,51 +590,179 @@ body {
   <!-- Map -->
   <div class="map-container">
     <div id="map"></div>
+
     <div class="map-overlay">
-      <div class="map-chip">
-        <span class="dot"></span>
-        OpenStreetMap — free &amp; open
-      </div>
+      <div class="map-chip"><span class="dot"></span>OpenStreetMap — Magdeburg region</div>
     </div>
+
+    <!-- Placement mode banner -->
+    <div class="placement-banner" id="placementBanner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Click on the map to set location
+      <button onclick="cancelPlacement()">Cancel</button>
+    </div>
+
+    <!-- View toggle -->
     <div class="heatmap-toggle">
       <button class="active" onclick="setView('markers',this)">Markers</button>
       <button onclick="setView('heatmap',this)">Heatmap</button>
       <button onclick="setView('cluster',this)">Clusters</button>
     </div>
+
+    <!-- Survey Panel (slides in from right) -->
+    <div class="survey-overlay" id="surveyPanel">
+      <div class="survey-header">
+        <h2>Report an issue</h2>
+        <button class="survey-close" onclick="closePanel()">&times;</button>
+      </div>
+      <div class="survey-body">
+        <!-- Location -->
+        <div class="field">
+          <label>Location</label>
+          <div class="loc-display" id="locDisplay">
+            <div class="loc-dot"></div>
+            <span class="loc-text" id="locText">No location selected</span>
+            <button class="loc-btn" onclick="startPlacement()">Pick on map</button>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="field">
+          <label>Category</label>
+          <select id="formCat">
+            <option value="">Select a category...</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="transport">Transport</option>
+            <option value="environment">Green spaces / Environment</option>
+            <option value="climate_risk">Climate risk</option>
+          </select>
+        </div>
+
+        <!-- Title -->
+        <div class="field">
+          <label>Title</label>
+          <input type="text" id="formTitle" placeholder="e.g. Broken sidewalk on Main St" maxlength="80"/>
+        </div>
+
+        <!-- Description -->
+        <div class="field">
+          <label>Description</label>
+          <textarea id="formDesc" placeholder="Describe the issue in detail..."></textarea>
+        </div>
+
+        <!-- Rating -->
+        <div class="field">
+          <label>Severity / Rating</label>
+          <div class="star-input">
+            <input type="radio" name="rating" id="star5" value="5"/><label for="star5">&#9733;</label>
+            <input type="radio" name="rating" id="star4" value="4"/><label for="star4">&#9733;</label>
+            <input type="radio" name="rating" id="star3" value="3" checked/><label for="star3">&#9733;</label>
+            <input type="radio" name="rating" id="star2" value="2"/><label for="star2">&#9733;</label>
+            <input type="radio" name="rating" id="star1" value="1"/><label for="star1">&#9733;</label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="submit-btn" id="submitBtn" onclick="submitReport()">
+          Submit report
+        </button>
+
+        <div style="font-size:11px;color:var(--text3);text-align:center;line-height:1.5">
+          Reports are saved in your browser.<br>
+          Connect Supabase to store them permanently.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
 <script>
-// ── Tile Layers (all free, no API key) ──
+// ═══════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════
+
+const categories = {
+  infrastructure: { color: '#e85d4a', label: 'Infrastructure' },
+  transport:      { color: '#5b9cf5', label: 'Transport' },
+  environment:    { color: '#4ae3b5', label: 'Green spaces / Environment' },
+  climate_risk:   { color: '#f0a030', label: 'Climate risk' }
+};
+
+// Sample data — Magdeburg & surrounding areas
+const sampleData = [
+  // Magdeburg city center
+  { lat: 52.1247, lng: 11.6340, cat: 'infrastructure', title: 'Pothole near Hasselbachplatz', rating: 2, text: 'Deep pothole on Otto-von-Guericke-Str causing traffic problems.', time: Date.now()-86400000 },
+  { lat: 52.1277, lng: 11.6369, cat: 'environment', title: 'Domplatz needs more green', rating: 3, text: 'Cathedral square could benefit from more trees and benches.', time: Date.now()-172800000 },
+  { lat: 52.1310, lng: 11.6420, cat: 'transport', title: 'Tram line 1 delays', rating: 2, text: 'Frequent delays on tram line 1 between Hauptbahnhof and Alter Markt.', time: Date.now()-259200000 },
+  { lat: 52.1190, lng: 11.6280, cat: 'climate_risk', title: 'Flash flood zone Buckau', rating: 1, text: 'Buckau underpass floods during heavy rain — drainage inadequate.', time: Date.now()-345600000 },
+  { lat: 52.1350, lng: 11.6500, cat: 'climate_risk', title: 'Heat island Elbauenpark', rating: 3, text: 'Paved areas around Millennium Tower become extreme heat zones in summer.', time: Date.now()-432000000 },
+  { lat: 52.1155, lng: 11.6350, cat: 'infrastructure', title: 'Broken sidewalk Buckau', rating: 2, text: 'Cracked pavement along Karl-Schmidt-Str in Buckau district.', time: Date.now()-518400000 },
+  { lat: 52.1380, lng: 11.6250, cat: 'environment', title: 'Rotehorn Park beautiful', rating: 5, text: 'Stadtpark Rotehorn is a gem — well maintained and peaceful along the Elbe.', time: Date.now()-604800000 },
+  { lat: 52.1300, lng: 11.6150, cat: 'transport', title: 'Bike lane ends abruptly', rating: 1, text: 'Cycle path on Breiter Weg just stops without warning near Ulrichsplatz.', time: Date.now()-691200000 },
+  { lat: 52.1220, lng: 11.6180, cat: 'climate_risk', title: 'Stormwater overflow risk', rating: 2, text: 'Storm drains on Leipziger Str overflow during heavy rainfall events.', time: Date.now()-777600000 },
+  { lat: 52.1320, lng: 11.6320, cat: 'environment', title: 'Green Citadel green roof', rating: 5, text: 'Hundertwasser Green Citadel is a great example of urban greening.', time: Date.now()-864000000 },
+  // Surrounding: Wolmirstedt
+  { lat: 52.2480, lng: 11.6290, cat: 'infrastructure', title: 'Road repair needed B189', rating: 2, text: 'B189 road surface damaged near Wolmirstedt entrance.', time: Date.now()-950400000 },
+  { lat: 52.2510, lng: 11.6350, cat: 'environment', title: 'Ohre riverbank cleanup', rating: 3, text: 'Litter accumulating along the Ohre river path in Wolmirstedt.', time: Date.now()-1036800000 },
+  // Surrounding: Schönebeck
+  { lat: 52.0160, lng: 11.7390, cat: 'transport', title: 'S-Bahn frequency low', rating: 2, text: 'Only hourly service between Schönebeck and Magdeburg on weekends.', time: Date.now()-1123200000 },
+  { lat: 52.0120, lng: 11.7320, cat: 'climate_risk', title: 'Elbe flood risk zone', rating: 1, text: 'Low-lying areas near Schönebeck at high risk during Elbe spring floods.', time: Date.now()-1209600000 },
+  // Surrounding: Burg
+  { lat: 52.2720, lng: 11.8550, cat: 'infrastructure', title: 'Street lights out in Burg', rating: 2, text: 'Several street lights not working on Brüderstr in Burg center.', time: Date.now()-1296000000 },
+  { lat: 52.2690, lng: 11.8490, cat: 'transport', title: 'Crosswalk needed near school', rating: 1, text: 'Children have no safe crossing at Burg Grundschule entrance.', time: Date.now()-1382400000 },
+  // Surrounding: Haldensleben
+  { lat: 52.2880, lng: 11.4130, cat: 'environment', title: 'Forest trail maintained well', rating: 5, text: 'The hiking trail through Haldensleben forest is beautifully kept.', time: Date.now()-1468800000 },
+  { lat: 52.2830, lng: 11.4080, cat: 'transport', title: 'Bus 600 unreliable', rating: 2, text: 'Bus route 600 to Magdeburg frequently arrives late or skips stops.', time: Date.now()-1555200000 },
+  // Surrounding: Stassfurt
+  { lat: 51.8570, lng: 11.5850, cat: 'infrastructure', title: 'Bridge repair Stassfurt', rating: 3, text: 'Bode river bridge showing cracks, needs inspection.', time: Date.now()-1641600000 },
+  { lat: 51.8530, lng: 11.5780, cat: 'climate_risk', title: 'Drought affecting Bode river', rating: 2, text: 'Bode river levels critically low — affecting local water supply and ecology.', time: Date.now()-1728000000 },
+  // Surrounding: Zerbst
+  { lat: 51.9660, lng: 12.0850, cat: 'environment', title: 'Zerbst park restoration', rating: 4, text: 'Castle park restoration in Zerbst is looking wonderful.', time: Date.now()-1814400000 },
+  // Surrounding: Wanzleben
+  { lat: 52.0640, lng: 11.4440, cat: 'infrastructure', title: 'Water pipe issue', rating: 1, text: 'Recurring water pressure drops in Wanzleben residential area.', time: Date.now()-1900800000 },
+  // Magdeburg outskirts
+  { lat: 52.1480, lng: 11.5800, cat: 'transport', title: 'New P+R lot needed', rating: 3, text: 'Park and ride facility needed near Magdeburg-Sudenburg station.', time: Date.now()-1987200000 },
+  { lat: 52.1050, lng: 11.6650, cat: 'climate_risk', title: 'Elbe flood barrier weakness', rating: 1, text: 'Flood barriers near Cracau need reinforcement — 2013 flood levels could breach them.', time: Date.now()-2073600000 },
+  { lat: 52.1560, lng: 11.6700, cat: 'climate_risk', title: 'Erosion at waterway junction', rating: 3, text: 'Bank erosion accelerating near Wasserstraßenkreuz due to changing water patterns.', time: Date.now()-2160000000 },
+];
+
+// Load user submissions from localStorage
+function loadSubmissions() {
+  try { return JSON.parse(localStorage.getItem('cv_submissions') || '[]'); }
+  catch { return []; }
+}
+
+function saveSubmissions(data) {
+  localStorage.setItem('cv_submissions', JSON.stringify(data));
+}
+
+let userSubmissions = loadSubmissions();
+let allData = [...sampleData, ...userSubmissions];
+
+
+// ═══════════════════════════════════════
+// MAP SETUP
+// ═══════════════════════════════════════
+
 const tiles = {
   landuse: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-    maxZoom: 19
+    attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>', maxZoom: 19
   }),
   roads: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://carto.com">CARTO</a>',
-    maxZoom: 19
+    attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://carto.com">CARTO</a>', maxZoom: 19
   }),
   topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-    maxZoom: 17
-  }),
-  satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '&copy; Esri, Maxar, Earthstar',
-    maxZoom: 18
+    attribution: '&copy; OpenTopoMap', maxZoom: 17
   })
 };
 
-// ── Map Init (centered on Müncheberg area / Berlin region) ──
-const map = L.map('map', {
-  center: [52.50, 13.40],
-  zoom: 12,
-  zoomControl: true,
-  layers: [tiles.landuse]
-});
+const map = L.map('map', { center: [52.12, 11.63], zoom: 11, zoomControl: true, layers: [tiles.landuse] });
 
 let currentBase = 'landuse';
 
@@ -698,65 +770,34 @@ function switchBase(name) {
   map.removeLayer(tiles[currentBase]);
   map.addLayer(tiles[name]);
   currentBase = name;
-  document.querySelectorAll('.layer-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.layer === name);
-  });
+  document.querySelectorAll('.layer-btn').forEach(b => b.classList.toggle('active', b.dataset.layer === name));
 }
 
-// ── Sample citizen voice data (Berlin area) ──
-const categories = {
-  infrastructure: { color: '#e85d4a', label: 'Infrastructure' },
-  environment:    { color: '#4ae3b5', label: 'Green spaces' },
-  transport:      { color: '#5b9cf5', label: 'Transport' },
-  safety:         { color: '#f0a030', label: 'Public safety' },
-  community:      { color: '#a78bfa', label: 'Community' }
-};
 
-const sampleData = [
-  { lat: 52.5200, lng: 13.4050, cat: 'infrastructure', title: 'Pothole on Friedrichstr.', rating: 2, text: 'Large pothole near intersection, dangerous for cyclists.' },
-  { lat: 52.5170, lng: 13.3890, cat: 'environment', title: 'Park needs maintenance', rating: 3, text: 'Broken benches and overgrown paths in Tiergarten south.' },
-  { lat: 52.5230, lng: 13.4120, cat: 'transport', title: 'Bus stop shelter missing', rating: 1, text: 'Bus stop M48 has no rain cover since October.' },
-  { lat: 52.5110, lng: 13.3950, cat: 'safety', title: 'Poor street lighting', rating: 2, text: 'Very dark stretch along the canal, feels unsafe at night.' },
-  { lat: 52.5280, lng: 13.4200, cat: 'community', title: 'Great new playground', rating: 5, text: 'The new playground at Volkspark is wonderful for kids!' },
-  { lat: 52.5060, lng: 13.3320, cat: 'infrastructure', title: 'Broken sidewalk tiles', rating: 2, text: 'Several cracked tiles near Savignyplatz.' },
-  { lat: 52.5340, lng: 13.3880, cat: 'environment', title: 'New trees planted', rating: 5, text: 'Beautiful new linden trees along the boulevard.' },
-  { lat: 52.5090, lng: 13.3760, cat: 'transport', title: 'Bike lane blocked', rating: 1, text: 'Construction blocking bike lane for 3 months without detour signs.' },
-  { lat: 52.5150, lng: 13.4500, cat: 'safety', title: 'Traffic signal malfunction', rating: 2, text: 'Pedestrian signal stuck on red at Warschauer crossing.' },
-  { lat: 52.5400, lng: 13.4100, cat: 'community', title: 'Community garden thriving', rating: 5, text: 'Our neighborhood garden is bringing people together.' },
-  { lat: 52.4980, lng: 13.4280, cat: 'infrastructure', title: 'Water main leak', rating: 1, text: 'Visible water leaking from pipe cover on Sonnenallee.' },
-  { lat: 52.5310, lng: 13.3500, cat: 'environment', title: 'River bank erosion', rating: 3, text: 'Spree riverbank showing erosion near Bellevue.' },
-  { lat: 52.5070, lng: 13.2800, cat: 'transport', title: 'New bike repair station', rating: 5, text: 'Free bike repair tools installed at S-Bahn, very helpful.' },
-  { lat: 52.4890, lng: 13.3600, cat: 'safety', title: 'Speed limit ignored', rating: 2, text: 'Cars routinely exceeding 30km/h zone near school.' },
-  { lat: 52.5450, lng: 13.3650, cat: 'community', title: 'Weekend market proposal', rating: 4, text: 'Would love a weekly farmers market in this square.' },
-  { lat: 52.5180, lng: 13.3200, cat: 'infrastructure', title: 'Bridge railing rusted', rating: 3, text: 'Charlottenburg bridge railing showing significant rust.' },
-  { lat: 52.5025, lng: 13.4150, cat: 'environment', title: 'Illegal dump site', rating: 1, text: 'Construction waste dumped near canal path, blocks access.' },
-  { lat: 52.5360, lng: 13.4400, cat: 'transport', title: 'Tram frequency too low', rating: 2, text: 'M10 tram only every 20 min on weekends. Need more service.' },
-  { lat: 52.4950, lng: 13.3400, cat: 'safety', title: 'Well-lit underpass', rating: 4, text: 'New LED lights in the underpass make it much safer.' },
-  { lat: 52.5260, lng: 13.3150, cat: 'community', title: 'Youth center needed', rating: 3, text: 'This area has nothing for teenagers. A youth center would help.' },
-  { lat: 52.4820, lng: 13.4350, cat: 'infrastructure', title: 'Drainage blocked', rating: 2, text: 'Flooding after every rain because drains are clogged.' },
-  { lat: 52.5420, lng: 13.4550, cat: 'environment', title: 'Bird nesting area preserved', rating: 5, text: 'Happy to see the wetland area fenced off for nesting season.' },
-  { lat: 52.5100, lng: 13.4600, cat: 'transport', title: 'Missing crosswalk', rating: 1, text: 'No safe crossing for 400m along this road.' },
-  { lat: 52.5500, lng: 13.3900, cat: 'safety', title: 'Graffiti and vandalism', rating: 2, text: 'Increased vandalism at the S-Bahn station.' },
-  { lat: 52.5030, lng: 13.3100, cat: 'community', title: 'Library hours extended', rating: 5, text: 'Great that the library is now open until 21:00 on weekdays!' },
-];
+// ═══════════════════════════════════════
+// MARKERS & LAYERS
+// ═══════════════════════════════════════
 
-// ── Create markers ──
-function createIcon(color) {
+function createIcon(color, cat) {
+  const icons = {
+    infrastructure: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M10 20v-5h4v5"/></svg>`,
+    transport: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 18h10"/><path d="M3 18V6h13l4 6v6"/></svg>`,
+    environment: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 22V8"/><path d="M5 12s2-5 7-8c5 3 7 8 7 8"/><path d="M7 17s2-3 5-5c3 2 5 5 5 5"/></svg>`,
+    climate_risk: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+  };
+  const icon = icons[cat] || '';
   return L.divIcon({
     className: 'custom-marker',
-    html: `<div class="point-marker" style="background:${color}"></div>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-    popupAnchor: [0, -10]
+    html: `<div style="width:32px;height:32px;border-radius:50%;background:${color};border:2.5px solid rgba(255,255,255,0.9);box-shadow:0 2px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${icon}</div>`,
+    iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -18]
   });
 }
 
-function makeStars(n) {
-  return '★'.repeat(n) + '☆'.repeat(5 - n);
-}
+function makeStars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
 
 function makePopup(d) {
   const cat = categories[d.cat];
+  const timeStr = d.time ? new Date(d.time).toLocaleDateString() : '';
   return `<div class="popup-inner">
     <div class="popup-cat" style="color:${cat.color}">${cat.label}</div>
     <div class="popup-title">${d.title}</div>
@@ -764,59 +805,58 @@ function makePopup(d) {
     <div class="popup-rating">
       <span class="popup-stars">${makeStars(d.rating)}</span>
       <span class="popup-rating-text">${d.rating}/5</span>
+      ${timeStr ? `<span style="margin-left:auto;font-size:10px;color:#6b685f">${timeStr}</span>` : ''}
     </div>
   </div>`;
 }
 
-// Marker layer
-const markerLayer = L.layerGroup();
-sampleData.forEach(d => {
-  const cat = categories[d.cat];
-  const marker = L.marker([d.lat, d.lng], { icon: createIcon(cat.color) });
-  marker.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
-  marker.catKey = d.cat;
-  markerLayer.addLayer(marker);
-});
-markerLayer.addTo(map);
-
-// Cluster layer
-const clusterLayer = L.markerClusterGroup({
+let markerLayer = L.layerGroup();
+let clusterLayer = L.markerClusterGroup({
   iconCreateFunction: function(cluster) {
-    const count = cluster.getChildCount();
-    let cls = count < 10 ? 'cluster-sm' : count < 25 ? 'cluster-md' : 'cluster-lg';
-    return L.divIcon({
-      html: `<div class="cluster-icon ${cls}">${count}</div>`,
-      className: 'marker-cluster',
-      iconSize: [40, 40]
-    });
+    const c = cluster.getChildCount();
+    let cls = c < 10 ? 'cluster-sm' : c < 25 ? 'cluster-md' : 'cluster-lg';
+    return L.divIcon({ html: `<div class="cluster-icon ${cls}">${c}</div>`, className: 'marker-cluster', iconSize: [40, 40] });
   },
-  maxClusterRadius: 50,
-  spiderfyOnMaxZoom: true
+  maxClusterRadius: 50
 });
-sampleData.forEach(d => {
-  const cat = categories[d.cat];
-  const marker = L.marker([d.lat, d.lng], { icon: createIcon(cat.color) });
-  marker.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
-  clusterLayer.addLayer(marker);
-});
-
-// Heatmap layer
-const heatData = sampleData.map(d => [d.lat, d.lng, 0.8]);
-const heatLayer = L.heatLayer(heatData, {
-  radius: 28,
-  blur: 20,
-  maxZoom: 15,
-  gradient: { 0.2: '#1a1c25', 0.4: '#2bc49a', 0.6: '#4ae3b5', 0.8: '#f0a030', 1.0: '#e85d4a' }
-});
-
-// ── View toggle ──
+let heatLayer;
 let currentView = 'markers';
 
-function setView(mode, btn) {
-  // Remove all
+function rebuildLayers() {
+  markerLayer.clearLayers();
+  clusterLayer.clearLayers();
+
+  allData.forEach(d => {
+    const cat = categories[d.cat];
+    if (!cat) return;
+    const m1 = L.marker([d.lat, d.lng], { icon: createIcon(cat.color, d.cat) });
+    m1.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
+    markerLayer.addLayer(m1);
+
+    const m2 = L.marker([d.lat, d.lng], { icon: createIcon(cat.color, d.cat) });
+    m2.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
+    clusterLayer.addLayer(m2);
+  });
+
+  const heatData = allData.map(d => [d.lat, d.lng, 0.8]);
+  if (heatLayer) map.removeLayer(heatLayer);
+  heatLayer = L.heatLayer(heatData, {
+    radius: 28, blur: 20, maxZoom: 15,
+    gradient: { 0.2: '#1a1c25', 0.4: '#2bc49a', 0.6: '#4ae3b5', 0.8: '#f0a030', 1.0: '#e85d4a' }
+  });
+
+  // Re-apply current view
   map.removeLayer(markerLayer);
   map.removeLayer(clusterLayer);
-  map.removeLayer(heatLayer);
+  if (currentView === 'markers') markerLayer.addTo(map);
+  else if (currentView === 'cluster') clusterLayer.addTo(map);
+  else if (currentView === 'heatmap') heatLayer.addTo(map);
+}
+
+function setView(mode, btn) {
+  map.removeLayer(markerLayer);
+  map.removeLayer(clusterLayer);
+  if (heatLayer) map.removeLayer(heatLayer);
 
   if (mode === 'markers') markerLayer.addTo(map);
   else if (mode === 'cluster') clusterLayer.addTo(map);
@@ -827,34 +867,207 @@ function setView(mode, btn) {
   btn.classList.add('active');
 }
 
-// ── Category filter ──
+
+// ═══════════════════════════════════════
+// SIDEBAR: Categories & Recent
+// ═══════════════════════════════════════
+
+function updateSidebar() {
+  // Category counts
+  const counts = {};
+  Object.keys(categories).forEach(k => counts[k] = 0);
+  allData.forEach(d => { if (counts[d.cat] !== undefined) counts[d.cat]++; });
+
+  const catList = document.getElementById('catList');
+  catList.innerHTML = Object.entries(categories).map(([key, val]) =>
+    `<div class="cat-item" onclick="filterCat('${key}')">
+      <span class="cat-dot" style="background:${val.color}"></span>
+      ${val.label}
+      <span class="cat-count">${counts[key]}</span>
+    </div>`
+  ).join('');
+
+  // Metrics
+  document.getElementById('metricTotal').textContent = allData.length;
+  const avgR = allData.reduce((s, d) => s + d.rating, 0) / allData.length;
+  document.getElementById('metricRating').textContent = avgR.toFixed(1);
+  document.getElementById('totalBadge').textContent = allData.length + ' reports';
+
+  // Recent submissions
+  const recentList = document.getElementById('recentList');
+  const recent = [...allData].sort((a, b) => (b.time || 0) - (a.time || 0)).slice(0, 5);
+  if (recent.length) {
+    recentList.innerHTML = recent.map(d => {
+      const cat = categories[d.cat] || { color: '#888', label: '?' };
+      const ago = timeAgo(d.time);
+      return `<div class="recent-item" onclick="map.setView([${d.lat},${d.lng}],15)">
+        <span class="cat-dot" style="background:${cat.color}"></span>
+        <span class="recent-title">${d.title}</span>
+        <span class="recent-time">${ago}</span>
+      </div>`;
+    }).join('');
+  }
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  return days + 'd ago';
+}
+
 function filterCat(cat) {
   map.removeLayer(markerLayer);
   map.removeLayer(clusterLayer);
-  map.removeLayer(heatLayer);
+  if (heatLayer) map.removeLayer(heatLayer);
 
   const filtered = L.layerGroup();
-  sampleData.filter(d => d.cat === cat).forEach(d => {
+  allData.filter(d => d.cat === cat).forEach(d => {
     const c = categories[d.cat];
-    const m = L.marker([d.lat, d.lng], { icon: createIcon(c.color) });
+    const m = L.marker([d.lat, d.lng], { icon: createIcon(c.color, d.cat) });
     m.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
     filtered.addLayer(m);
   });
   filtered.addTo(map);
 
-  // Reset on second click
   setTimeout(() => {
     document.addEventListener('click', function reset(e) {
       if (!e.target.closest('.cat-item')) {
         map.removeLayer(filtered);
-        if (currentView === 'markers') markerLayer.addTo(map);
-        else if (currentView === 'cluster') clusterLayer.addTo(map);
-        else heatLayer.addTo(map);
+        rebuildLayers();
         document.removeEventListener('click', reset);
       }
     });
   }, 100);
 }
+
+
+// ═══════════════════════════════════════
+// SURVEY FORM & SUBMISSION
+// ═══════════════════════════════════════
+
+let placementMode = false;
+let selectedLatLng = null;
+let tempMarker = null;
+
+function startReport() {
+  document.getElementById('surveyPanel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('surveyPanel').classList.remove('open');
+  cancelPlacement();
+  resetForm();
+}
+
+function startPlacement() {
+  placementMode = true;
+  document.getElementById('placementBanner').classList.add('show');
+  map.getContainer().style.cursor = 'crosshair';
+  // Minimize panel on mobile-ish
+  document.getElementById('surveyPanel').classList.remove('open');
+}
+
+function cancelPlacement() {
+  placementMode = false;
+  document.getElementById('placementBanner').classList.remove('show');
+  map.getContainer().style.cursor = '';
+  if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+}
+
+map.on('click', function(e) {
+  if (!placementMode) return;
+
+  selectedLatLng = e.latlng;
+
+  if (tempMarker) map.removeLayer(tempMarker);
+  tempMarker = L.marker(e.latlng, {
+    icon: L.divIcon({ className: 'custom-marker', html: '<div class="temp-marker"></div>', iconSize: [24, 24], iconAnchor: [12, 12] })
+  }).addTo(map);
+
+  // Update form
+  document.getElementById('locDisplay').classList.add('set');
+  document.getElementById('locText').textContent =
+    `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+
+  placementMode = false;
+  document.getElementById('placementBanner').classList.remove('show');
+  map.getContainer().style.cursor = '';
+
+  // Re-open panel
+  document.getElementById('surveyPanel').classList.add('open');
+});
+
+function submitReport() {
+  const cat = document.getElementById('formCat').value;
+  const title = document.getElementById('formTitle').value.trim();
+  const desc = document.getElementById('formDesc').value.trim();
+  const ratingEl = document.querySelector('.star-input input:checked');
+  const rating = ratingEl ? parseInt(ratingEl.value) : 3;
+
+  // Validation
+  if (!selectedLatLng) { showToast('Please pick a location on the map'); return; }
+  if (!cat) { showToast('Please select a category'); return; }
+  if (!title) { showToast('Please enter a title'); return; }
+
+  const report = {
+    lat: selectedLatLng.lat,
+    lng: selectedLatLng.lng,
+    cat, title, rating,
+    text: desc || 'No description provided.',
+    time: Date.now()
+  };
+
+  // Save
+  userSubmissions.push(report);
+  saveSubmissions(userSubmissions);
+  allData.push(report);
+
+  // Remove temp marker
+  if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+
+  // Rebuild
+  rebuildLayers();
+  updateSidebar();
+
+  // Close & reset
+  closePanel();
+  showToast('Report submitted successfully!');
+
+  // Fly to new marker
+  map.flyTo([report.lat, report.lng], 15, { duration: 0.8 });
+}
+
+function resetForm() {
+  document.getElementById('formCat').value = '';
+  document.getElementById('formTitle').value = '';
+  document.getElementById('formDesc').value = '';
+  document.getElementById('locDisplay').classList.remove('set');
+  document.getElementById('locText').textContent = 'No location selected';
+  document.querySelector('#star3').checked = true;
+  selectedLatLng = null;
+  if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+
+rebuildLayers();
+updateSidebar();
 </script>
 </body>
 </html>
