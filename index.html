@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Citizen Voice — Map View</title>
+<title>Societal Voice — Map View</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -493,6 +494,81 @@ body {
 .recent-item .cat-dot { flex-shrink: 0; }
 .recent-title { flex: 1; color: var(--text); font-weight: 500; font-size: 12px; }
 .recent-time { font-size: 10px; color: var(--text3); white-space: nowrap; }
+
+/* Geometry type buttons */
+.geo-types { display: flex; gap: 6px; }
+
+.geo-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 8px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text2); font-family: inherit;
+  font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+}
+
+.geo-btn:hover { border-color: var(--border2); color: var(--text); }
+.geo-btn.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+
+/* Hide leaflet draw toolbar (we use our own buttons) */
+.leaflet-draw { display: none !important; }
+
+/* ── View panels (Dashboard, Surveys) ── */
+.view-panel {
+  display: none;
+  grid-column: 1 / -1;
+  background: var(--bg);
+  overflow-y: auto;
+  padding: 32px 40px;
+}
+
+.view-panel.active { display: block; }
+
+.view-panel::-webkit-scrollbar { width: 6px; }
+.view-panel::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+
+.panel-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.panel-sub { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+
+/* Dashboard grid */
+.dash-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+
+.dash-card {
+  background: var(--bg2); border-radius: var(--radius); padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.dash-card-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.dash-card-val { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+.dash-card-change { font-size: 12px; margin-top: 4px; }
+
+.dash-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+
+.chart-box {
+  background: var(--bg2); border-radius: var(--radius); padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.chart-box-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+
+/* Data table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+.data-table tr:hover td { background: var(--bg2); }
+.data-table .cat-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+
+/* Surveys view */
+.survey-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+.svy-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; transition: border-color 0.15s;
+}
+
+.svy-card:hover { border-color: var(--border2); }
+.svy-card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.svy-card-desc { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+.svy-card-meta { display: flex; gap: 12px; font-size: 11px; color: var(--text3); }
+.svy-card-status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 </style>
 </head>
 <body>
@@ -510,10 +586,10 @@ body {
     </div>
     <div class="topbar-sep"></div>
     <div class="topbar-nav">
-      <button class="active">Map view</button>
-      <button>Dashboard</button>
-      <button>Surveys</button>
-      <button>Export</button>
+      <button class="active" onclick="showView('map',this)">Map view</button>
+      <button onclick="showView('dashboard',this)">Dashboard</button>
+      <button onclick="showView('surveys',this)">Surveys</button>
+      <button onclick="exportCSV()">Export</button>
     </div>
     <div class="topbar-right">
       <div class="topbar-badge" id="totalBadge">247 reports</div>
@@ -569,6 +645,10 @@ body {
           <span class="layer-dot" style="background:#d4a054"></span>Topographic
           <span class="check">&#10003;</span>
         </button>
+        <button class="layer-btn" data-layer="satellite" onclick="switchBase('satellite')">
+          <span class="layer-dot" style="background:#888"></span>Satellite
+          <span class="check">&#10003;</span>
+        </button>
       </div>
     </div>
 
@@ -598,7 +678,7 @@ body {
     <!-- Placement mode banner -->
     <div class="placement-banner" id="placementBanner">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      Click on the map to set location
+      <span id="bannerText">Click on the map to set location</span>
       <button onclick="cancelPlacement()">Cancel</button>
     </div>
 
@@ -618,11 +698,29 @@ body {
       <div class="survey-body">
         <!-- Location -->
         <div class="field">
+          <label>Geometry type</label>
+          <div class="geo-types">
+            <button class="geo-btn active" data-geo="point" onclick="selectGeoType('point',this)">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Point
+            </button>
+            <button class="geo-btn" data-geo="line" onclick="selectGeoType('line',this)">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20L10 14L14 18L20 4"/></svg>
+              Road / Line
+            </button>
+            <button class="geo-btn" data-geo="polygon" onclick="selectGeoType('polygon',this)">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3L18 3L21 12L15 21L3 18L6 3Z"/></svg>
+              Area
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
           <label>Location</label>
           <div class="loc-display" id="locDisplay">
             <div class="loc-dot"></div>
             <span class="loc-text" id="locText">No location selected</span>
-            <button class="loc-btn" onclick="startPlacement()">Pick on map</button>
+            <button class="loc-btn" onclick="startPlacement()">Draw on map</button>
           </div>
         </div>
 
@@ -674,14 +772,97 @@ body {
       </div>
     </div>
   </div>
+
+  <!-- Dashboard Panel -->
+  <div class="view-panel" id="dashboardPanel">
+    <div class="panel-title">Dashboard</div>
+    <div class="panel-sub">Overview of all citizen reports across the Magdeburg region</div>
+
+    <div class="dash-metrics" id="dashMetrics"></div>
+
+    <div class="dash-charts">
+      <div class="chart-box">
+        <div class="chart-box-title">Reports by category</div>
+        <div style="position:relative;height:250px"><canvas id="catChart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">Ratings distribution</div>
+        <div style="position:relative;height:250px"><canvas id="ratingChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-box" style="margin-bottom:24px">
+      <div class="chart-box-title">All reports</div>
+      <table class="data-table" id="dataTable">
+        <thead><tr><th>Title</th><th>Category</th><th>Rating</th><th>Type</th><th>Date</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Surveys Panel -->
+  <div class="view-panel" id="surveysPanel">
+    <div class="panel-title">Surveys</div>
+    <div class="panel-sub">Active and draft survey templates for citizen data collection</div>
+    <div class="survey-cards" id="surveyCards">
+      <div class="svy-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="svy-card-title">Infrastructure Assessment</div>
+          <span class="svy-card-status" style="background:var(--accent-bg);color:var(--accent)">Active</span>
+        </div>
+        <div class="svy-card-desc">Collect reports on road conditions, sidewalks, bridges, pipes, and public buildings across the Magdeburg region.</div>
+        <div class="svy-card-meta"><span>8 responses</span><span>Created 2 weeks ago</span></div>
+      </div>
+      <div class="svy-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="svy-card-title">Transport & Mobility</div>
+          <span class="svy-card-status" style="background:var(--accent-bg);color:var(--accent)">Active</span>
+        </div>
+        <div class="svy-card-desc">Map bike lanes, bus stops, tram issues, crosswalks, and parking facilities. Supports line drawing for routes.</div>
+        <div class="svy-card-meta"><span>7 responses</span><span>Created 2 weeks ago</span></div>
+      </div>
+      <div class="svy-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="svy-card-title">Green Spaces & Environment</div>
+          <span class="svy-card-status" style="background:var(--accent-bg);color:var(--accent)">Active</span>
+        </div>
+        <div class="svy-card-desc">Document parks, urban forests, river conditions, pollution, and biodiversity in the region.</div>
+        <div class="svy-card-meta"><span>6 responses</span><span>Created 2 weeks ago</span></div>
+      </div>
+      <div class="svy-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="svy-card-title">Climate Risk Mapping</div>
+          <span class="svy-card-status" style="background:var(--accent-bg);color:var(--accent)">Active</span>
+        </div>
+        <div class="svy-card-desc">Identify flood zones, heat islands, erosion areas, and drought-affected regions. Supports polygon drawing for areas.</div>
+        <div class="svy-card-meta"><span>7 responses</span><span>Created 2 weeks ago</span></div>
+      </div>
+      <div class="svy-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="svy-card-title">Citizen Satisfaction Survey</div>
+          <span class="svy-card-status" style="background:rgba(240,160,48,0.1);color:var(--warn)">Draft</span>
+        </div>
+        <div class="svy-card-desc">General quality-of-life survey asking residents to rate services, safety, and environment in their neighborhood.</div>
+        <div class="svy-card-meta"><span>0 responses</span><span>Not yet published</span></div>
+      </div>
+      <div class="svy-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:140px;cursor:pointer" onclick="showToast('Connect Supabase to create custom surveys')">
+        <div style="text-align:center;color:var(--text3)">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="margin-bottom:6px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <div style="font-size:13px;font-weight:500">Create new survey</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 // ═══════════════════════════════════════
 // DATA LAYER
@@ -754,11 +935,14 @@ const tiles = {
   landuse: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>', maxZoom: 19
   }),
-  roads: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  roads: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://carto.com">CARTO</a>', maxZoom: 19
   }),
   topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenTopoMap', maxZoom: 17
+  }),
+  satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '&copy; Esri, Maxar, Earthstar', maxZoom: 18
   })
 };
 
@@ -953,7 +1137,21 @@ function filterCat(cat) {
 
 let placementMode = false;
 let selectedLatLng = null;
+let selectedGeometry = null; // { type: 'point'|'polyline'|'polygon', latlngs: [...] }
 let tempMarker = null;
+let tempDrawLayer = null;
+let currentGeoType = 'point';
+let activeDrawHandler = null;
+
+// Drawn items layer (persists on map)
+const drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+function selectGeoType(type, btn) {
+  currentGeoType = type;
+  document.querySelectorAll('.geo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
 
 function startReport() {
   document.getElementById('surveyPanel').classList.add('open');
@@ -966,11 +1164,37 @@ function closePanel() {
 }
 
 function startPlacement() {
+  // Clean up previous
+  cancelPlacement();
   placementMode = true;
-  document.getElementById('placementBanner').classList.add('show');
-  map.getContainer().style.cursor = 'crosshair';
-  // Minimize panel on mobile-ish
   document.getElementById('surveyPanel').classList.remove('open');
+
+  const bannerText = {
+    point: 'Click on the map to place a point',
+    line: 'Click to draw a line — double-click to finish',
+    polygon: 'Click to draw an area — double-click to close'
+  };
+
+  document.getElementById('bannerText').textContent = bannerText[currentGeoType];
+  document.getElementById('placementBanner').classList.add('show');
+
+  if (currentGeoType === 'point') {
+    map.getContainer().style.cursor = 'crosshair';
+  } else if (currentGeoType === 'line') {
+    map.getContainer().style.cursor = 'crosshair';
+    activeDrawHandler = new L.Draw.Polyline(map, {
+      shapeOptions: { color: '#4ae3b5', weight: 4, opacity: 0.9 },
+      showLength: true
+    });
+    activeDrawHandler.enable();
+  } else if (currentGeoType === 'polygon') {
+    map.getContainer().style.cursor = 'crosshair';
+    activeDrawHandler = new L.Draw.Polygon(map, {
+      shapeOptions: { color: '#4ae3b5', weight: 3, opacity: 0.8, fillColor: '#4ae3b5', fillOpacity: 0.15 },
+      showArea: true
+    });
+    activeDrawHandler.enable();
+  }
 }
 
 function cancelPlacement() {
@@ -978,30 +1202,80 @@ function cancelPlacement() {
   document.getElementById('placementBanner').classList.remove('show');
   map.getContainer().style.cursor = '';
   if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+  if (tempDrawLayer) { map.removeLayer(tempDrawLayer); tempDrawLayer = null; }
+  if (activeDrawHandler) { activeDrawHandler.disable(); activeDrawHandler = null; }
+  selectedGeometry = null;
 }
 
+// Point mode: map click
 map.on('click', function(e) {
-  if (!placementMode) return;
+  if (!placementMode || currentGeoType !== 'point') return;
 
   selectedLatLng = e.latlng;
+  selectedGeometry = { type: 'point', latlngs: [e.latlng] };
 
   if (tempMarker) map.removeLayer(tempMarker);
   tempMarker = L.marker(e.latlng, {
     icon: L.divIcon({ className: 'custom-marker', html: '<div class="temp-marker"></div>', iconSize: [24, 24], iconAnchor: [12, 12] })
   }).addTo(map);
 
-  // Update form
-  document.getElementById('locDisplay').classList.add('set');
-  document.getElementById('locText').textContent =
-    `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+  finishDrawing(`Point: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`);
+});
 
+// Line & polygon mode: Leaflet.Draw events
+map.on(L.Draw.Event.CREATED, function(e) {
+  const layer = e.layer;
+  const type = e.layerType;
+
+  if (tempDrawLayer) map.removeLayer(tempDrawLayer);
+  tempDrawLayer = layer;
+  map.addLayer(layer);
+
+  const latlngs = layer.getLatLngs();
+
+  if (type === 'polyline') {
+    selectedGeometry = { type: 'polyline', latlngs: latlngs };
+    const len = calculateLength(latlngs);
+    selectedLatLng = latlngs[Math.floor(latlngs.length / 2)]; // midpoint
+    finishDrawing(`Line: ${latlngs.length} points, ~${len}m`);
+  } else if (type === 'polygon') {
+    selectedGeometry = { type: 'polygon', latlngs: latlngs[0] || latlngs };
+    const center = layer.getBounds().getCenter();
+    selectedLatLng = center;
+    const area = calculateArea(latlngs[0] || latlngs);
+    finishDrawing(`Area: ${(latlngs[0] || latlngs).length} vertices, ~${area}m²`);
+  }
+});
+
+function finishDrawing(displayText) {
   placementMode = false;
   document.getElementById('placementBanner').classList.remove('show');
   map.getContainer().style.cursor = '';
+  if (activeDrawHandler) { activeDrawHandler.disable(); activeDrawHandler = null; }
 
-  // Re-open panel
+  document.getElementById('locDisplay').classList.add('set');
+  document.getElementById('locText').textContent = displayText;
   document.getElementById('surveyPanel').classList.add('open');
-});
+}
+
+function calculateLength(latlngs) {
+  let total = 0;
+  for (let i = 1; i < latlngs.length; i++) {
+    total += latlngs[i-1].distanceTo(latlngs[i]);
+  }
+  return Math.round(total);
+}
+
+function calculateArea(latlngs) {
+  // Shoelace approximation
+  let area = 0;
+  for (let i = 0; i < latlngs.length; i++) {
+    const j = (i + 1) % latlngs.length;
+    area += latlngs[i].lat * latlngs[j].lng;
+    area -= latlngs[j].lat * latlngs[i].lng;
+  }
+  return Math.round(Math.abs(area) * 111320 * 111320 / 2);
+}
 
 function submitReport() {
   const cat = document.getElementById('formCat').value;
@@ -1011,7 +1285,7 @@ function submitReport() {
   const rating = ratingEl ? parseInt(ratingEl.value) : 3;
 
   // Validation
-  if (!selectedLatLng) { showToast('Please pick a location on the map'); return; }
+  if (!selectedLatLng || !selectedGeometry) { showToast('Please draw a location on the map'); return; }
   if (!cat) { showToast('Please select a category'); return; }
   if (!title) { showToast('Please enter a title'); return; }
 
@@ -1020,13 +1294,23 @@ function submitReport() {
     lng: selectedLatLng.lng,
     cat, title, rating,
     text: desc || 'No description provided.',
-    time: Date.now()
+    time: Date.now(),
+    geoType: selectedGeometry.type,
+    geoCoords: selectedGeometry.latlngs.map(ll => [ll.lat, ll.lng])
   };
 
   // Save
   userSubmissions.push(report);
   saveSubmissions(userSubmissions);
   allData.push(report);
+
+  // Move drawn shape to persistent layer
+  if (tempDrawLayer) {
+    const cat_color = categories[cat] ? categories[cat].color : '#888';
+    tempDrawLayer.setStyle && tempDrawLayer.setStyle({ color: cat_color, fillColor: cat_color });
+    drawnItems.addLayer(tempDrawLayer);
+    tempDrawLayer = null;
+  }
 
   // Remove temp marker
   if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
@@ -1039,7 +1323,7 @@ function submitReport() {
   closePanel();
   showToast('Report submitted successfully!');
 
-  // Fly to new marker
+  // Fly to location
   map.flyTo([report.lat, report.lng], 15, { duration: 0.8 });
 }
 
@@ -1051,7 +1335,13 @@ function resetForm() {
   document.getElementById('locText').textContent = 'No location selected';
   document.querySelector('#star3').checked = true;
   selectedLatLng = null;
+  selectedGeometry = null;
+  currentGeoType = 'point';
+  document.querySelectorAll('.geo-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.geo-btn[data-geo="point"]').classList.add('active');
   if (tempMarker) { map.removeLayer(tempMarker); tempMarker = null; }
+  if (tempDrawLayer) { map.removeLayer(tempDrawLayer); tempDrawLayer = null; }
+  if (activeDrawHandler) { activeDrawHandler.disable(); activeDrawHandler = null; }
 }
 
 function showToast(msg) {
@@ -1059,6 +1349,176 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+
+// ═══════════════════════════════════════
+// VIEW SWITCHING (Map / Dashboard / Surveys)
+// ═══════════════════════════════════════
+
+function showView(view, btn) {
+  // Update nav buttons
+  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Toggle visibility
+  const sidebar = document.querySelector('.sidebar');
+  const mapCont = document.querySelector('.map-container');
+  const dashPanel = document.getElementById('dashboardPanel');
+  const survPanel = document.getElementById('surveysPanel');
+
+  sidebar.style.display = 'none';
+  mapCont.style.display = 'none';
+  dashPanel.classList.remove('active');
+  survPanel.classList.remove('active');
+
+  if (view === 'map') {
+    sidebar.style.display = 'flex';
+    mapCont.style.display = 'block';
+    map.invalidateSize();
+  } else if (view === 'dashboard') {
+    dashPanel.classList.add('active');
+    renderDashboard();
+  } else if (view === 'surveys') {
+    survPanel.classList.add('active');
+  }
+}
+
+
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+
+let catChartInstance = null;
+let ratingChartInstance = null;
+
+function renderDashboard() {
+  // Metrics
+  const counts = {};
+  Object.keys(categories).forEach(k => counts[k] = 0);
+  allData.forEach(d => { if (counts[d.cat] !== undefined) counts[d.cat]++; });
+  const avgRating = allData.length ? (allData.reduce((s, d) => s + d.rating, 0) / allData.length).toFixed(1) : '0';
+  const geoTypes = { point: 0, polyline: 0, polygon: 0 };
+  allData.forEach(d => { geoTypes[d.geoType || 'point']++; });
+
+  document.getElementById('dashMetrics').innerHTML = `
+    <div class="dash-card">
+      <div class="dash-card-label">Total reports</div>
+      <div class="dash-card-val" style="color:var(--accent)">${allData.length}</div>
+      <div class="dash-card-change" style="color:var(--accent)">+${userSubmissions.length} by you</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-label">Avg. rating</div>
+      <div class="dash-card-val" style="color:var(--warn)">${avgRating}</div>
+      <div class="dash-card-change" style="color:var(--text3)">out of 5.0</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-label">Geometry types</div>
+      <div class="dash-card-val" style="color:var(--info)">${geoTypes.point}/${geoTypes.polyline}/${geoTypes.polygon}</div>
+      <div class="dash-card-change" style="color:var(--text3)">pts / lines / areas</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-label">Categories</div>
+      <div class="dash-card-val" style="color:var(--purple)">${Object.keys(categories).length}</div>
+      <div class="dash-card-change" style="color:var(--text3)">active categories</div>
+    </div>
+  `;
+
+  // Category chart
+  const catLabels = Object.values(categories).map(c => c.label);
+  const catData = Object.keys(categories).map(k => counts[k]);
+  const catColors = Object.values(categories).map(c => c.color);
+
+  if (catChartInstance) catChartInstance.destroy();
+  catChartInstance = new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+      labels: catLabels,
+      datasets: [{ data: catData, backgroundColor: catColors, borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#9a978f', font: { size: 12 }, padding: 16 } }
+      }
+    }
+  });
+
+  // Rating chart
+  const ratingCounts = [0,0,0,0,0];
+  allData.forEach(d => { if (d.rating >= 1 && d.rating <= 5) ratingCounts[d.rating - 1]++; });
+
+  if (ratingChartInstance) ratingChartInstance.destroy();
+  ratingChartInstance = new Chart(document.getElementById('ratingChart'), {
+    type: 'bar',
+    data: {
+      labels: ['1 star', '2 stars', '3 stars', '4 stars', '5 stars'],
+      datasets: [{
+        data: ratingCounts,
+        backgroundColor: ['#e85d4a', '#f0a030', '#f0a030', '#4ae3b5', '#4ae3b5'],
+        borderRadius: 6, barThickness: 32
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, ticks: { color: '#6b685f', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#6b685f' }, grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Data table
+  const tbody = document.querySelector('#dataTable tbody');
+  const sorted = [...allData].sort((a, b) => (b.time || 0) - (a.time || 0));
+  tbody.innerHTML = sorted.map(d => {
+    const cat = categories[d.cat] || { color: '#888', label: d.cat };
+    const geo = d.geoType || 'point';
+    const geoLabel = { point: 'Point', polyline: 'Line', polygon: 'Area' }[geo] || geo;
+    const date = d.time ? new Date(d.time).toLocaleDateString() : '-';
+    return `<tr>
+      <td style="color:var(--text);font-weight:500">${d.title}</td>
+      <td><span class="cat-badge" style="background:${cat.color}22;color:${cat.color}"><span style="width:6px;height:6px;border-radius:50%;background:${cat.color};display:inline-block"></span>${cat.label}</span></td>
+      <td style="color:var(--warn)">${'★'.repeat(d.rating)}${'☆'.repeat(5-d.rating)}</td>
+      <td>${geoLabel}</td>
+      <td>${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+
+// ═══════════════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════════════
+
+function exportCSV() {
+  const headers = ['Title', 'Category', 'Rating', 'Latitude', 'Longitude', 'Geometry Type', 'Description', 'Date'];
+  const rows = allData.map(d => {
+    const cat = categories[d.cat] ? categories[d.cat].label : d.cat;
+    const date = d.time ? new Date(d.time).toISOString().split('T')[0] : '';
+    const geo = d.geoType || 'point';
+    return [
+      '"' + (d.title || '').replace(/"/g, '""') + '"',
+      cat,
+      d.rating,
+      d.lat.toFixed(6),
+      d.lng.toFixed(6),
+      geo,
+      '"' + (d.text || '').replace(/"/g, '""') + '"',
+      date
+    ].join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'citizen-voice-reports.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exported — ' + allData.length + ' reports');
 }
 
 
