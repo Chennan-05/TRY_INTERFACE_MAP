@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citizen Voice — Map View</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0f1117;
+  --bg2: #1a1c25;
+  --bg3: #242632;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e6e1;
+  --text2: #9a978f;
+  --text3: #6b685f;
+  --accent: #4ae3b5;
+  --accent2: #2bc49a;
+  --accent-bg: rgba(74,227,181,0.08);
+  --danger: #e85d4a;
+  --warn: #f0a030;
+  --info: #5b9cf5;
+  --purple: #a78bfa;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Layout */
+.app {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: 56px 1fr;
+  height: 100vh;
+}
+
+/* Top bar */
+.topbar {
+  grid-column: 1 / -1;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon svg { width: 16px; height: 16px; }
+
+.topbar-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.topbar-nav button {
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.topbar-nav button:hover { color: var(--text); background: var(--bg3); }
+.topbar-nav button.active { color: var(--accent); background: var(--accent-bg); }
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(74,227,181,0.15);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+
+.section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+
+/* Metric cards */
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.metric-card {
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+}
+
+.metric-card.c1::before { background: var(--accent); }
+.metric-card.c2::before { background: var(--info); }
+.metric-card.c3::before { background: var(--warn); }
+.metric-card.c4::before { background: var(--purple); }
+
+.metric-val {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--text2);
+  font-weight: 500;
+}
+
+/* Layer controls */
+.layer-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.layer-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.layer-btn:hover { border-color: rgba(255,255,255,0.15); background: var(--bg3); }
+.layer-btn.active { border-color: var(--accent); background: var(--accent-bg); }
+
+.layer-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.layer-btn .check {
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.15s;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.layer-btn.active .check { opacity: 1; }
+
+/* Category filters */
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.cat-item:hover { background: var(--bg3); color: var(--text); }
+
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cat-count {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* Legend */
+.legend {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.legend-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Map */
+.map-container {
+  position: relative;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom Leaflet overrides */
+.leaflet-container { background: var(--bg) !important; font-family: 'DM Sans', sans-serif !important; }
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--bg2) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 16px !important;
+}
+
+.leaflet-control-zoom a:hover { background: var(--bg3) !important; }
+
+.custom-popup .leaflet-popup-content-wrapper {
+  background: var(--bg2);
+  color: var(--text);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  padding: 0;
+}
+
+.custom-popup .leaflet-popup-tip { background: var(--bg2); }
+.custom-popup .leaflet-popup-content { margin: 0; width: 240px !important; }
+
+.popup-inner {
+  padding: 16px;
+}
+
+.popup-cat {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.popup-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.popup-meta {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.popup-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.popup-stars {
+  color: var(--warn);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.popup-rating-text {
+  font-size: 12px;
+  color: var(--text2);
+  margin-left: 6px;
+}
+
+/* Floating map controls */
+.map-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 800;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--text2);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.map-chip .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Heatmap toggle */
+.heatmap-toggle {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  z-index: 800;
+  display: flex;
+  gap: 4px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.heatmap-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.heatmap-toggle button.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Cluster markers */
+.marker-cluster {
+  background: transparent !important;
+}
+
+.cluster-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  position: relative;
+}
+
+.cluster-icon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.2;
+}
+
+.cluster-sm { background: var(--accent); }
+.cluster-md { background: var(--info); }
+.cluster-lg { background: var(--purple); }
+
+/* Custom point markers */
+.point-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--bg2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.point-marker:hover { transform: scale(1.4); }
+
+/* Attribution override */
+.leaflet-control-attribution {
+  background: rgba(15,17,23,0.8) !important;
+  color: var(--text3) !important;
+  font-size: 10px !important;
+  border-radius: 4px 0 0 0 !important;
+}
+
+.leaflet-control-attribution a { color: var(--text2) !important; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0f1117" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+      Citizen Voice
+    </div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-nav">
+      <button class="active">Map view</button>
+      <button>Dashboard</button>
+      <button>Surveys</button>
+      <button>Export</button>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-badge">LIVE — OSM Data</div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Metrics -->
+    <div>
+      <div class="section-label">Overview</div>
+      <div class="metrics">
+        <div class="metric-card c1">
+          <div class="metric-val" style="color:var(--accent)">247</div>
+          <div class="metric-label">Responses</div>
+        </div>
+        <div class="metric-card c2">
+          <div class="metric-val" style="color:var(--info)">12</div>
+          <div class="metric-label">Active surveys</div>
+        </div>
+        <div class="metric-card c3">
+          <div class="metric-val" style="color:var(--warn)">3.8</div>
+          <div class="metric-label">Avg. rating</div>
+        </div>
+        <div class="metric-card c4">
+          <div class="metric-val" style="color:var(--purple)">89%</div>
+          <div class="metric-label">Coverage</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Layers -->
+    <div>
+      <div class="section-label">Map layers</div>
+      <div class="layer-group">
+        <button class="layer-btn active" data-layer="landuse" onclick="switchBase('landuse')">
+          <span class="layer-dot" style="background:#6dba5e"></span>
+          Land use map
+          <span class="check">&#10003;</span>
+        </button>
+        <button class="layer-btn" data-layer="roads" onclick="switchBase('roads')">
+          <span class="layer-dot" style="background:#5b9cf5"></span>
+          Road network
+          <span class="check">&#10003;</span>
+        </button>
+        <button class="layer-btn" data-layer="topo" onclick="switchBase('topo')">
+          <span class="layer-dot" style="background:#d4a054"></span>
+          Topographic
+          <span class="check">&#10003;</span>
+        </button>
+        <button class="layer-btn" data-layer="satellite" onclick="switchBase('satellite')">
+          <span class="layer-dot" style="background:#888"></span>
+          Satellite hybrid
+          <span class="check">&#10003;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div>
+      <div class="section-label">Issue categories</div>
+      <div class="cat-list">
+        <div class="cat-item" onclick="filterCat('infrastructure')">
+          <span class="cat-dot" style="background:var(--danger)"></span>
+          Infrastructure
+          <span class="cat-count">64</span>
+        </div>
+        <div class="cat-item" onclick="filterCat('environment')">
+          <span class="cat-dot" style="background:var(--accent)"></span>
+          Green spaces
+          <span class="cat-count">53</span>
+        </div>
+        <div class="cat-item" onclick="filterCat('transport')">
+          <span class="cat-dot" style="background:var(--info)"></span>
+          Transport
+          <span class="cat-count">48</span>
+        </div>
+        <div class="cat-item" onclick="filterCat('safety')">
+          <span class="cat-dot" style="background:var(--warn)"></span>
+          Public safety
+          <span class="cat-count">42</span>
+        </div>
+        <div class="cat-item" onclick="filterCat('community')">
+          <span class="cat-dot" style="background:var(--purple)"></span>
+          Community
+          <span class="cat-count">40</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Land Use Legend -->
+    <div>
+      <div class="section-label">Land use legend (OSM)</div>
+      <div class="legend">
+        <div class="legend-items">
+          <div class="legend-row"><span class="legend-swatch" style="background:#aadeaa"></span> Residential</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:#cfeca8"></span> Farmland / Rural</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:#b5d29c"></span> Forest / Nature</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:#ddccbb"></span> Commercial</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:#c7b8a8"></span> Industrial</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:#cdcdcd"></span> Roads / Transit</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:#aad3df"></span> Water</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="map-container">
+    <div id="map"></div>
+    <div class="map-overlay">
+      <div class="map-chip">
+        <span class="dot"></span>
+        OpenStreetMap — free &amp; open
+      </div>
+    </div>
+    <div class="heatmap-toggle">
+      <button class="active" onclick="setView('markers',this)">Markers</button>
+      <button onclick="setView('heatmap',this)">Heatmap</button>
+      <button onclick="setView('cluster',this)">Clusters</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+<script>
+// ── Tile Layers (all free, no API key) ──
+const tiles = {
+  landuse: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  }),
+  roads: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://carto.com">CARTO</a>',
+    maxZoom: 19
+  }),
+  topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://openstreetmap.org">OSM</a> &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
+    maxZoom: 17
+  }),
+  satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '&copy; Esri, Maxar, Earthstar',
+    maxZoom: 18
+  })
+};
+
+// ── Map Init (centered on Müncheberg area / Berlin region) ──
+const map = L.map('map', {
+  center: [52.50, 13.40],
+  zoom: 12,
+  zoomControl: true,
+  layers: [tiles.landuse]
+});
+
+let currentBase = 'landuse';
+
+function switchBase(name) {
+  map.removeLayer(tiles[currentBase]);
+  map.addLayer(tiles[name]);
+  currentBase = name;
+  document.querySelectorAll('.layer-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.layer === name);
+  });
+}
+
+// ── Sample citizen voice data (Berlin area) ──
+const categories = {
+  infrastructure: { color: '#e85d4a', label: 'Infrastructure' },
+  environment:    { color: '#4ae3b5', label: 'Green spaces' },
+  transport:      { color: '#5b9cf5', label: 'Transport' },
+  safety:         { color: '#f0a030', label: 'Public safety' },
+  community:      { color: '#a78bfa', label: 'Community' }
+};
+
+const sampleData = [
+  { lat: 52.5200, lng: 13.4050, cat: 'infrastructure', title: 'Pothole on Friedrichstr.', rating: 2, text: 'Large pothole near intersection, dangerous for cyclists.' },
+  { lat: 52.5170, lng: 13.3890, cat: 'environment', title: 'Park needs maintenance', rating: 3, text: 'Broken benches and overgrown paths in Tiergarten south.' },
+  { lat: 52.5230, lng: 13.4120, cat: 'transport', title: 'Bus stop shelter missing', rating: 1, text: 'Bus stop M48 has no rain cover since October.' },
+  { lat: 52.5110, lng: 13.3950, cat: 'safety', title: 'Poor street lighting', rating: 2, text: 'Very dark stretch along the canal, feels unsafe at night.' },
+  { lat: 52.5280, lng: 13.4200, cat: 'community', title: 'Great new playground', rating: 5, text: 'The new playground at Volkspark is wonderful for kids!' },
+  { lat: 52.5060, lng: 13.3320, cat: 'infrastructure', title: 'Broken sidewalk tiles', rating: 2, text: 'Several cracked tiles near Savignyplatz.' },
+  { lat: 52.5340, lng: 13.3880, cat: 'environment', title: 'New trees planted', rating: 5, text: 'Beautiful new linden trees along the boulevard.' },
+  { lat: 52.5090, lng: 13.3760, cat: 'transport', title: 'Bike lane blocked', rating: 1, text: 'Construction blocking bike lane for 3 months without detour signs.' },
+  { lat: 52.5150, lng: 13.4500, cat: 'safety', title: 'Traffic signal malfunction', rating: 2, text: 'Pedestrian signal stuck on red at Warschauer crossing.' },
+  { lat: 52.5400, lng: 13.4100, cat: 'community', title: 'Community garden thriving', rating: 5, text: 'Our neighborhood garden is bringing people together.' },
+  { lat: 52.4980, lng: 13.4280, cat: 'infrastructure', title: 'Water main leak', rating: 1, text: 'Visible water leaking from pipe cover on Sonnenallee.' },
+  { lat: 52.5310, lng: 13.3500, cat: 'environment', title: 'River bank erosion', rating: 3, text: 'Spree riverbank showing erosion near Bellevue.' },
+  { lat: 52.5070, lng: 13.2800, cat: 'transport', title: 'New bike repair station', rating: 5, text: 'Free bike repair tools installed at S-Bahn, very helpful.' },
+  { lat: 52.4890, lng: 13.3600, cat: 'safety', title: 'Speed limit ignored', rating: 2, text: 'Cars routinely exceeding 30km/h zone near school.' },
+  { lat: 52.5450, lng: 13.3650, cat: 'community', title: 'Weekend market proposal', rating: 4, text: 'Would love a weekly farmers market in this square.' },
+  { lat: 52.5180, lng: 13.3200, cat: 'infrastructure', title: 'Bridge railing rusted', rating: 3, text: 'Charlottenburg bridge railing showing significant rust.' },
+  { lat: 52.5025, lng: 13.4150, cat: 'environment', title: 'Illegal dump site', rating: 1, text: 'Construction waste dumped near canal path, blocks access.' },
+  { lat: 52.5360, lng: 13.4400, cat: 'transport', title: 'Tram frequency too low', rating: 2, text: 'M10 tram only every 20 min on weekends. Need more service.' },
+  { lat: 52.4950, lng: 13.3400, cat: 'safety', title: 'Well-lit underpass', rating: 4, text: 'New LED lights in the underpass make it much safer.' },
+  { lat: 52.5260, lng: 13.3150, cat: 'community', title: 'Youth center needed', rating: 3, text: 'This area has nothing for teenagers. A youth center would help.' },
+  { lat: 52.4820, lng: 13.4350, cat: 'infrastructure', title: 'Drainage blocked', rating: 2, text: 'Flooding after every rain because drains are clogged.' },
+  { lat: 52.5420, lng: 13.4550, cat: 'environment', title: 'Bird nesting area preserved', rating: 5, text: 'Happy to see the wetland area fenced off for nesting season.' },
+  { lat: 52.5100, lng: 13.4600, cat: 'transport', title: 'Missing crosswalk', rating: 1, text: 'No safe crossing for 400m along this road.' },
+  { lat: 52.5500, lng: 13.3900, cat: 'safety', title: 'Graffiti and vandalism', rating: 2, text: 'Increased vandalism at the S-Bahn station.' },
+  { lat: 52.5030, lng: 13.3100, cat: 'community', title: 'Library hours extended', rating: 5, text: 'Great that the library is now open until 21:00 on weekdays!' },
+];
+
+// ── Create markers ──
+function createIcon(color) {
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `<div class="point-marker" style="background:${color}"></div>`,
+    iconSize: [14, 14],
+    iconAnchor: [7, 7],
+    popupAnchor: [0, -10]
+  });
+}
+
+function makeStars(n) {
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
+function makePopup(d) {
+  const cat = categories[d.cat];
+  return `<div class="popup-inner">
+    <div class="popup-cat" style="color:${cat.color}">${cat.label}</div>
+    <div class="popup-title">${d.title}</div>
+    <div class="popup-meta">${d.text}</div>
+    <div class="popup-rating">
+      <span class="popup-stars">${makeStars(d.rating)}</span>
+      <span class="popup-rating-text">${d.rating}/5</span>
+    </div>
+  </div>`;
+}
+
+// Marker layer
+const markerLayer = L.layerGroup();
+sampleData.forEach(d => {
+  const cat = categories[d.cat];
+  const marker = L.marker([d.lat, d.lng], { icon: createIcon(cat.color) });
+  marker.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
+  marker.catKey = d.cat;
+  markerLayer.addLayer(marker);
+});
+markerLayer.addTo(map);
+
+// Cluster layer
+const clusterLayer = L.markerClusterGroup({
+  iconCreateFunction: function(cluster) {
+    const count = cluster.getChildCount();
+    let cls = count < 10 ? 'cluster-sm' : count < 25 ? 'cluster-md' : 'cluster-lg';
+    return L.divIcon({
+      html: `<div class="cluster-icon ${cls}">${count}</div>`,
+      className: 'marker-cluster',
+      iconSize: [40, 40]
+    });
+  },
+  maxClusterRadius: 50,
+  spiderfyOnMaxZoom: true
+});
+sampleData.forEach(d => {
+  const cat = categories[d.cat];
+  const marker = L.marker([d.lat, d.lng], { icon: createIcon(cat.color) });
+  marker.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
+  clusterLayer.addLayer(marker);
+});
+
+// Heatmap layer
+const heatData = sampleData.map(d => [d.lat, d.lng, 0.8]);
+const heatLayer = L.heatLayer(heatData, {
+  radius: 28,
+  blur: 20,
+  maxZoom: 15,
+  gradient: { 0.2: '#1a1c25', 0.4: '#2bc49a', 0.6: '#4ae3b5', 0.8: '#f0a030', 1.0: '#e85d4a' }
+});
+
+// ── View toggle ──
+let currentView = 'markers';
+
+function setView(mode, btn) {
+  // Remove all
+  map.removeLayer(markerLayer);
+  map.removeLayer(clusterLayer);
+  map.removeLayer(heatLayer);
+
+  if (mode === 'markers') markerLayer.addTo(map);
+  else if (mode === 'cluster') clusterLayer.addTo(map);
+  else if (mode === 'heatmap') heatLayer.addTo(map);
+
+  currentView = mode;
+  document.querySelectorAll('.heatmap-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Category filter ──
+function filterCat(cat) {
+  map.removeLayer(markerLayer);
+  map.removeLayer(clusterLayer);
+  map.removeLayer(heatLayer);
+
+  const filtered = L.layerGroup();
+  sampleData.filter(d => d.cat === cat).forEach(d => {
+    const c = categories[d.cat];
+    const m = L.marker([d.lat, d.lng], { icon: createIcon(c.color) });
+    m.bindPopup(makePopup(d), { className: 'custom-popup', closeButton: false });
+    filtered.addLayer(m);
+  });
+  filtered.addTo(map);
+
+  // Reset on second click
+  setTimeout(() => {
+    document.addEventListener('click', function reset(e) {
+      if (!e.target.closest('.cat-item')) {
+        map.removeLayer(filtered);
+        if (currentView === 'markers') markerLayer.addTo(map);
+        else if (currentView === 'cluster') clusterLayer.addTo(map);
+        else heatLayer.addTo(map);
+        document.removeEventListener('click', reset);
+      }
+    });
+  }, 100);
+}
+</script>
+</body>
+</html>
